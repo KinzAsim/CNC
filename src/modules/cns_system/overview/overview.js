@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,Text,StyleSheet,ScrollView} from 'react-native';
+import {View,Text,StyleSheet,ScrollView,LogBox} from 'react-native';
 import {Card} from 'react-native-elements';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Divider } from 'react-native-elements';
@@ -7,14 +7,33 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import DatePicker from 'react-native-datepicker';
+import { connect } from 'react-redux';
+import moment from 'moment';
+import {getCamera,getColor} from '../../../redux/action/cncAction';
+
+LogBox.ignoreAllLogs('Cant perform a React state update');
 
 class HomeScreen extends React.Component{
     constructor(props){
         super(props);
-        this.state = {date:"2016-05-15"}
+        this.state = {
+        date:"2016-05-15",
+        startDate:moment().subtract(7,'days'),
+        endDate:moment().add(1,'day')}
     }
-    render()
-    {
+
+    componentDidMount(){
+        const{user,color} = this.props;
+        const{startDate,endDate} = this.state;
+        //this.props.getColor(startDate,endDate,color.id);
+        this.props.getCamera(user.id);
+    }
+
+    render(){
+        const{camera,cameraLoading,user,colour,colorLoading} = this.props;
+        console.log('color',colour)
+
+
         return(
             <View style={{flex:1,backgroundColor:'#141746'}}>
             <View style={{backgroundColor:'transparent',alignItems:'center',justifyContent:'center',alignSelf:'center',
@@ -110,7 +129,7 @@ class HomeScreen extends React.Component{
                 <Text style={{color:'#00cffb',fontSize:15,marginLeft:wp('5%'),marginTop:hp('1%'),fontWeight:'bold'}}>Camera Status</Text>
                 <Divider style={{backgroundColor:'#00cffb',marginRight:wp('16%'),marginBottom:hp('0.3%'),marginLeft:wp('5%')}}/>
                 <View style={{flexDirection:'row'}}>
-                <Text style={{marginHorizontal:wp('5%'),color:'#00cffb',marginTop:hp('2%'),fontWeight:'bold'}}>OFF</Text>
+                <Text style={{marginHorizontal:wp('5%'),color:'#00cffb',marginTop:hp('2%'),fontWeight:'bold'}}>{camera[0].camera}</Text>
                 <Icon2 name="camera" size={35} color="#00cffb" style={{marginLeft:wp('55%')}}/>
                 </View>                
                 </View>
@@ -119,7 +138,7 @@ class HomeScreen extends React.Component{
                 <Text style={{color:'#c700a6',marginLeft:wp('5%'),marginTop:hp('0.5%'),fontWeight:'bold'}}>Color</Text>
                 <Divider style={{backgroundColor:'#c700a6',marginRight:wp('15%'),marginBottom:hp('0.5%'),marginLeft:wp('5%')}}/>
                 <View style={{flexDirection:'row',marginBottom:wp('1%')}}>
-                <Text style={{marginHorizontal:wp('5%'),color:'#c700a6',marginTop:hp('2%'),fontWeight:'bold'}}>OFF</Text>
+            <Text style={{marginHorizontal:wp('5%'),color:'#c700a6',marginTop:hp('2%'),fontWeight:'bold'}}>{camera[0].color}</Text>
                 <Icon1 name="lightbulb-on-outline" size={40} color="#c700a6" style={{marginLeft:wp('55%')}}/>
                 </View>
                 </View>
@@ -171,7 +190,15 @@ class HomeScreen extends React.Component{
     }
 }
 //#00cffb,c700a6
-export default HomeScreen;
+
+const mapStateToProps = (state) => ({
+    user : state.auth.user,
+    camera: state.cnc.camera,
+    cameraLoading: state.cnc.cameraLoading,
+    colour: state.cnc.colour,
+    colorLoading: state.cnc.colorLoading
+})
+export default connect(mapStateToProps,{getCamera,getColor}) (HomeScreen);
 
 
 const styles = StyleSheet.create({

@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { colors } from '../style';
 import HomeScreen from '../modules/cns_system/overview/overview';
 import LogsScreen from '../modules/cns_system/logs/logs';
+import GraphScreen from '../modules/cns_system/graphs/graphs';
 const iconHome = require('../../assets/images/tabbar/home2.png');
 const iconDetail = require('../../assets/images/tabbar/detail1.png');
 const iconGraphs = require('../../assets/images/tabbar/chart1.png');
@@ -29,7 +30,14 @@ export default createBottomTabNavigator(
         title: 'Logs',
         headerLeft: null
       },
-    },        
+    },  
+    Graphs: {
+      screen: GraphScreen,
+      navigationOptions: {
+        title: 'Charts',
+        headerLeft: null
+      },
+    },       
   },
   
   {
@@ -44,6 +52,9 @@ export default createBottomTabNavigator(
           break;
           case 'Logs':
             iconSource = iconDetail;
+          break;
+          case 'Graphs':
+            iconSource = iconGraphs;
           break;
           default:
             iconSource = iconComponents;

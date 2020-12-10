@@ -6,13 +6,23 @@ import {colors} from '../../style';
 import {connect} from 'react-redux';
 import {login} from '../../redux/action/authAction';
 import { Divider } from 'react-native-elements';
+import Axios from 'axios';
 
 class LoginScreen extends React.Component{    
           state = {
           email: '',
           password: '',
+          Ip:null
       };     
     
+
+      componentDidMount(){
+        Axios.get('https:api.ipify.org?format=json').then((data)=> {
+          this.setState({
+            Ip:data.data.ip
+          })
+        });
+      }
 
    UNSAFE_componentWillMount(){
      const {navigation,isAuthenticated} = this.props;
@@ -33,8 +43,8 @@ class LoginScreen extends React.Component{
    }
 
     handleSubmit = () => {  
-      const {email,password} = this.state;
-      this.props.login(email,password);
+      const {email,password,Ip} = this.state;
+      this.props.login(email,password,Ip);
       
     
   }

@@ -1,6 +1,10 @@
 const initState = {
     logsLoading:false,
-    logs:[]
+    logs:[],
+    cameraLoading:false,
+    camera:[],
+    colorLoading:false,
+    colour:[]
 };
 
 const cncReducer = (state = initState, action) => {
@@ -18,6 +22,28 @@ const cncReducer = (state = initState, action) => {
                 logsLoading: false,
                 logs:action.payload
             }
+        case 'CAMERA_LOADING':
+            return {
+              ...state,
+              cameraLoading: true 
+            } 
+        case 'GET_CAMERA':
+            return {
+                ...state,
+                cameraLoading: false,
+                camera:action.payload
+            }
+        case 'COLOR_LOADING':
+            return {
+                ...state,
+                colorLoading: true 
+                } 
+        case 'GET_COLOR':
+            return {
+                ...state,
+                colorLoading: false,
+                colour:action.payload
+                }
         default: 
             return state;   
     }

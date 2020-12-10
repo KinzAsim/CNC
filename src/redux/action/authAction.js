@@ -1,10 +1,10 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import {url} from './types';
 
 
-export const login = (email, password)=> {
-    
-    return (dispatch, getState)=> {
+export const login = (email, password,Ip)=> {    
+    return  (dispatch, getState)=> {
         dispatch({
             type:'USER_LOADING'
         })
@@ -17,17 +17,18 @@ export const login = (email, password)=> {
     const body = JSON.stringify({
         email,
         password,
+        ip:Ip
     })
+    console.log(body)
     axios.post(`${url}/user/login`, body, config)
     .then(res=>
-       
-        dispatch ({
-            type : 'LOGIN_SUCCESS',
-            payload : res.data
-    })
+            dispatch ({
+                type : 'LOGIN_SUCCESS',
+                payload : res.data
+        })
     )
     .catch(err => {
-         
+         console.log("hello",err)
     });
 };
 }
@@ -67,3 +68,15 @@ export const loadUser = (token) => {
 //     })
 //   }
   
+export const tokenConfig = async (getState) => {
+    const token = await AsyncStorage.getItem('userToken');
+    const comfig = {
+        headers: {
+            'content-type':'Application/json'
+        }
+    }
+    if(token){
+        config.headers['auth'] = token;
+    }
+    return config;
+}
