@@ -69,16 +69,41 @@ export const getColor = (id,startDate,endDate) => async (dispatch,getState) => {
         startDate,
         endDate
     }
-
     try{
         const data = await axios.post(`${url}/led/duration/${id}`,config)
         console.log('data',data.data)
-        dispatch({
-            type:'GET_COLOR',
-            payload:data.data
-        })
+        // dispatch({
+        //     type:'GET_COLOR',
+        //     payload:data.data
+        // })
     }
     catch(err){
         console.log(err)      
     }
 }
+
+export const getSensors = () => (dispatch,getState) => new Promise(async function (resolve,reject){
+  
+    dispatch({
+        type:'SENSORS-LOADING'
+    })
+    const config = {
+        headers: {
+            'Content-type':'Application/json'
+        }
+    }
+
+    try{
+        const data = await axios.post(`${url}/led/sensors`,config)
+        // console.log('sensor',data.data)
+        dispatch({
+            type:'GET_SENSORS',
+            payload:data.data.data
+        })
+        resolve('done');
+    }
+    catch(err){
+        console.log(err)
+        reject(err);
+    }
+})

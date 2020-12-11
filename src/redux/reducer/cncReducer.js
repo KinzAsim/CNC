@@ -4,7 +4,9 @@ const initState = {
     cameraLoading:false,
     camera:[],
     colorLoading:false,
-    colour:[]
+    colour:[],
+    sensorLoading:false,
+    sensor:[]
 };
 
 const cncReducer = (state = initState, action) => {
@@ -44,6 +46,17 @@ const cncReducer = (state = initState, action) => {
                 colorLoading: false,
                 colour:action.payload
                 }
+        case 'SENSORS-LOADING':
+            return {
+                ...state,
+                sensorLoading:true
+            }
+        case 'GET_SENSORS':
+            return {
+                ...state,
+                sensorLoading:false,
+                sensor:action.payload
+            }
         default: 
             return state;   
     }
